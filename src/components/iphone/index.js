@@ -7,6 +7,8 @@ import style_iphone from '../button/style_iphone';
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
+//import the temperature component
+import Temperature from '../temperature';
 //hello
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
@@ -18,6 +20,7 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		// button display state
 		this.setState({ display: true });
+		this.fetchWeatherData();
 	}
 
 	// a call to fetch weather data via wunderground
@@ -31,8 +34,10 @@ export default class Iphone extends Component {
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
 		// once the data grabbed, hide the button
-		this.setState({ display: false });
+		this.setState({ display: true });
 	}
+
+	
 
 	// the main render method for the iphone component
 	render() {
@@ -45,14 +50,17 @@ export default class Iphone extends Component {
 			<div class={ style.container }>
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<span class={ tempStyles }>{ this.state.temp }</span>
-					<div class={ style.conditions }>highest: { this.state.temp_max} lowest: { this.state.temp_min} </div> 
+					<section class= { style.section }>
+						<div class={ style.conditions }>{ this.state.cond }</div>
+						<span class={ tempStyles }>{ this.state.temp }</span>
+						<div class={ style.conditions }>highest: { this.state.temp_max} lowest: { this.state.temp_min} </div>
+						<div>Tips</div>
+					</section>
 				</div>
 				<div class={ style.footer}>
-					<div class={ style.conditions}>Precipitation: {this.state.precipitation}</div>
-					<div class={ style.conditions}>Wind Speed: { this.state.wind_speed}</div>
-					<div>More information</div>
+					<div class={ style.group1}>Precipitation: {this.state.precipitation}</div>
+					<div class={ style.group1}>Wind Speed: { this.state.wind_speed}</div>
+					<div class={ style.group1}>More information</div>
 				</div>
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
@@ -62,14 +70,16 @@ export default class Iphone extends Component {
 		);
 	}
 
+
 	parseResponse = (parsed_json) => {
-		var location = parsed_json['name'];
-		var temp_c = parsed_json['main']['temp'];
-		var conditions = parsed_json['weather']['0']['description'];
-		var tempMax = parsed_json['main']['temp_max'];
-		var tempMin = parsed_json['main']['temp_min'];
-		var precipitation = parsed_json.list;
-		var windSpeed = parsed_json['wind']['speed'];
+		let location = parsed_json['name'];
+		let temp_c = parsed_json['main']['temp'];
+		let conditions = parsed_json['weather']['0']['description'];
+		let tempMax = parsed_json['main']['temp_max'];
+		let tempMin = parsed_json['main']['temp_min'];
+		let precipitation = parsed_json.list;
+		let windSpeed = parsed_json['wind']['speed'];
+		
 
 
 		// set states for fields so they could be rendered later on
@@ -81,6 +91,7 @@ export default class Iphone extends Component {
 			temp_min : tempMin,
 			wind_speed : windSpeed,
 			precipitation : precipitation
+	
 
 
 

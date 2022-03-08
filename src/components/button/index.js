@@ -14,7 +14,7 @@ export default class Button extends Component {
 		return (
 			<div>
 				<button onClick={cFunction}>
-					Display London Weather
+					Refresh
 				</button>
 			</div>
 		);
