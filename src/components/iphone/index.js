@@ -40,13 +40,19 @@ export default class Iphone extends Component {
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		
 		// display all weather data
+		// change the style sheet for the max and min temperatures.
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
 					<span class={ tempStyles }>{ this.state.temp }</span>
-					<div>highest:  lowest:</div>
+					<div class={ style.conditions }>highest: { this.state.temp_max} lowest: { this.state.temp_min} </div> 
+				</div>
+				<div class={ style.footer}>
+					<div class={ style.conditions}>Precipitation: {this.state.precipitation}</div>
+					<div class={ style.conditions}>Wind Speed: { this.state.wind_speed}</div>
+					<div>More information</div>
 				</div>
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
@@ -60,12 +66,24 @@ export default class Iphone extends Component {
 		var location = parsed_json['name'];
 		var temp_c = parsed_json['main']['temp'];
 		var conditions = parsed_json['weather']['0']['description'];
+		var tempMax = parsed_json['main']['temp_max'];
+		var tempMin = parsed_json['main']['temp_min'];
+		var precipitation = parsed_json.list;
+		var windSpeed = parsed_json['wind']['speed'];
+
 
 		// set states for fields so they could be rendered later on
 		this.setState({
 			locate: location,
 			temp: temp_c,
-			cond : conditions
+			cond : conditions,
+			temp_max : tempMax,
+			temp_min : tempMin,
+			wind_speed : windSpeed,
+			precipitation : precipitation
+
+
+
 		});      
 	}
 }
