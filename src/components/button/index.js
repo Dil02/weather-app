@@ -8,13 +8,13 @@ export default class Button extends Component {
 		let cFunction = this.props.clickFunction;
 		if(typeof cFunction !== 'function'){
 			cFunction = () => {
-				console.log("passed something as 'clickFunction' that wasn't a function !");
+				console.log("passed something as 'clickFunction' that wasn't a function!");
 			}
 		}
 		return (
 			<div>
 				<button onClick={cFunction}>
-					This is a button
+					Display London Weather
 				</button>
 			</div>
 		);
