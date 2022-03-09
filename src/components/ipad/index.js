@@ -41,19 +41,4 @@ export default class Ipad extends Component {
 			</div>
 		);
 	}
-
-	parseResponse = (parsed_json) => {
-		var city = parsed_json['name'];
-		var country = parsed_json['sys']['country'];
-		var temp_c = parsed_json['main']['temp'];
-		var conditions = parsed_json['weather']['0']['description'];
-
-		// set the states for fields so they could be rendered later on
-		this.setState({
-			currentCity: city,
-			currentCountry: country,
-			temp: temp_c,
-			cond : conditions
-		});      
-	}
 }

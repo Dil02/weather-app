@@ -3,8 +3,6 @@ import { h, render, Component } from 'preact';
 // import stylesheets for ipad & button
 import style from './style';
 import style_iphone from '../button/style_iphone';
-// import jquery for API calls
-import $ from 'jquery';
 // import the Button component
 import Button from '../button';
 //import the temperature component
@@ -19,27 +17,24 @@ export default class Iphone extends Component {
 		this.setState({
 			latitude: 12,
 			longitude: 24,
-			APIkey: "d7821ed13f437d8e5db4955a777c8a33"
-		})
-		// button display state
-		this.setState({ display: true });
-		this.fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey)
+			APIkey: "d7821ed13f437d8e5db4955a777c8a33",
+			display: true
+		});
+		this.fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey);
 	}
 
 	// a call to fetch weather data via wunderground
 	fetchWeatherData(latitide, longitude, APIkey) {
 		
-		// fetch(`api.openweathermap.org/data/2.5/weather?lat=${latitide}&lon=${longitude}&appid=${APIkey}`)
-		// 	.then(response => response.json())
-		// 	.then(response => {
-		// 		this.parseResponse(response);
-		// 		console.log(response);
-		// 	}, (error => {
-		// 		console.log('API call failed ' + error);
-		// 	}))
+		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitide}&lon=${longitude}&appid=${APIkey}`)
+			.then(response => response.json())
+			.then(response => {
+				this.parseResponse(response);
+				console.log(response);
+			}, (error => {
+				console.log('API call failed ' + error);
+			}));
 
-		// once the data grabbed, hide the button
-		this.setState({ display: true });
 	}
 
 	
@@ -58,18 +53,18 @@ export default class Iphone extends Component {
 					<section class= { style.section }>
 						<div class={ style.conditions }>{ this.state.cond }</div>
 						<span class={ tempStyles }>{ this.state.temp }</span>
-						<div class={ style.conditions }>highest: { this.state.temp_max} lowest: { this.state.temp_min} </div>
+						<div class={ style.conditions }>highest: { this.state.temp_max}  lowest: { this.state.temp_min} </div>
 						<div>Tips</div>
 					</section>
 				</div>
-				<div class={ style.footer}>
-					<div class={ style.group1}>Precipitation: {this.state.precipitation}</div>
-					<div class={ style.group1}>Wind Speed: { this.state.wind_speed}</div>
-					<div class={ style.group1}>More information</div>
+				<div class={ style.footer }>
+					<div class={ style.group1 }>Precipitation: {this.state.precipitation }</div>
+					<div class={ style.group1 }>Wind Speed: { this.state.wind_speed }</div>
+					<div class={ style.group1 }>More information</div>
 				</div>
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
-					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey) }/ > : null }
+					{ this.state.display ? <button class={ style_iphone.button } onClick={""}/> : null }
 				</div>
 			</div>
 		);
