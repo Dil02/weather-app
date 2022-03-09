@@ -16,23 +16,28 @@ export default class Iphone extends Component {
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
-		// temperature state
-		this.state.temp = "";
+		this.setState({
+			latitude: 12,
+			longitude: 24,
+			APIkey: "d7821ed13f437d8e5db4955a777c8a33"
+		})
 		// button display state
 		this.setState({ display: true });
-		this.fetchWeatherData();
+		this.fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey)
 	}
 
 	// a call to fetch weather data via wunderground
-	fetchWeatherData = () => {
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=77e99b5d05925f288eb80c06b0ef1be5";
-		$.ajax({
-			url: url,
-			dataType: "jsonp",
-			success : this.parseResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }
-		})
+	fetchWeatherData(latitide, longitude, APIkey) {
+		
+		// fetch(`api.openweathermap.org/data/2.5/weather?lat=${latitide}&lon=${longitude}&appid=${APIkey}`)
+		// 	.then(response => response.json())
+		// 	.then(response => {
+		// 		this.parseResponse(response);
+		// 		console.log(response);
+		// 	}, (error => {
+		// 		console.log('API call failed ' + error);
+		// 	}))
+
 		// once the data grabbed, hide the button
 		this.setState({ display: true });
 	}
@@ -64,14 +69,14 @@ export default class Iphone extends Component {
 				</div>
 				<div class={ style.details }></div>
 				<div class= { style_iphone.container }> 
-					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
+					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey) }/ > : null }
 				</div>
 			</div>
 		);
 	}
 
 
-	parseResponse = (parsed_json) => {
+	parseResponse(parsed_json) {
 		let location = parsed_json['name'];
 		let temp_c = parsed_json['main']['temp'];
 		let conditions = parsed_json['weather']['0']['description'];

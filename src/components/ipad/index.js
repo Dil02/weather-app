@@ -20,20 +20,6 @@ export default class Ipad extends Component {
 		this.setState({ display: true });
     }
 
-	// a call to fetch weather data via wunderground
-	fetchWeatherData = () => {
-		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=cf17e23b1d108b29a4d738d2084baf5";
-		$.ajax({
-			url: url,
-			dataType: "jsonp",
-			success : this.parseResponse,
-			error : function(req, err){ console.log('API call failed ' + err); }
-		})
-		// once the data grabbed, hide the button
-		this.setState({ display: false });
-	}
-
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
@@ -50,7 +36,7 @@ export default class Ipad extends Component {
 				</div>
 				<div class={ style.details }></div>
 				<div class={ style_ipad.container }>
-					{ this.state.display ? <Button class={ style_ipad.button } clickFunction={ this.fetchWeatherData }/ > : null }
+					{ this.state.display ?  b : null }
 				</div>
 			</div>
 		);
