@@ -36,7 +36,7 @@ export default class Ipad extends Component {
 				</div>
 				<div class={ style.details }></div>
 				<div class={ style_ipad.container }>
-					{ this.state.display ?  b : null }
+					{ this.state.display ?  null : null }
 				</div>
 			</div>
 		);

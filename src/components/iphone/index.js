@@ -80,7 +80,7 @@ export default class Iphone extends Component {
 				<div class={ style.header }>
 					<div id="header" class={ style.city }>
 						<img src={this.state.images.gps} onClick={() => this.getUserCurrentLocation()} style={{"pointer-events": "all"}}/>
-						{ this.state.location }
+						<div>{ this.state.location }</div>
 						<h6>Change (clickabble later)</h6>
 					</div>
 
