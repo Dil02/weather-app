@@ -5,8 +5,8 @@ import { h, Component } from 'preact';
 import Iphone from './iphone';
 import Ipad from './ipad';
 import Temperature from './temperature';
-import gpsUnlocated from '../../assets/icons/gpsUnlocated.png'
-import gpsLocated from '../../assets/icons/gps.png'
+import gpsUnlocated from '../assets/icons/gpsUnlocated.png'
+import gpsLocated from '../assets/icons/gps.png'
 
 export default class App extends Component {
 //var App = React.createClass({
@@ -21,7 +21,9 @@ export default class App extends Component {
 			latitude: 0,
 			longitude: 0,
 			APIkey: "d7821ed13f437d8e5db4955a777c8a33",
-			locationChanged: 0
+			locationChanged: 0,
+			temperatureData : {
+			}
 		});
 		this.getUserCurrentLocation();
 	}
@@ -31,7 +33,7 @@ export default class App extends Component {
 		this._fetchWeatherData(this.state.latitude, this.state.longitude, this.state.APIkey);
 	}
 	_fetchWeatherData(latitude, longitude, APIkey) {
-		fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${APIkey}`)
+		fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=${"metric"}&appid=${APIkey}`)
 			.then(response => response.json())
 			.then(response => {
 				this.parseResponse(response);
@@ -43,18 +45,65 @@ export default class App extends Component {
 
 	parseResponse(parsed_json) {
 		// set states for fields so they could be rendered later on
+		console.log(parsed_json)
 		this.setState({
-			location: parsed_json['name'],
-			temperatureC: parsed_json['main']['temp'] - 273.15,
-			conditions : parsed_json['weather']['0']['description'],
-			maxTemperature : parsed_json['main']['temp_max'] - 273.15,
-			minTemperature : parsed_json['main']['temp_min'] - 273.15,
-			wind_speed : parsed_json['wind']['speed'],
-			precipitation : parsed_json.list,
+			// location: parsed_json['city']['name'],
+			// temperatureC: parsed_json['list']['0']['main']['temp'],
+			// conditions : parsed_json['weather']['0']['description'],
+			// maxTemperature : parsed_json['main']['temp_max'],
+			// minTemperature : parsed_json['main']['temp_min'],
+			// wind_speed : parsed_json['wind']['speed'],
+			// precipitation : parsed_json.list,
 			images: {
 				gps: gpsLocated
+			},
+			temperatureData:{
+				city: 'need to figure out how to display city using Onecall API',
+				currentTemp : parsed_json['current']['temp'],
+				//Hourly Temp:
+				hour1Temp : parsed_json['hourly'][0]['temp'],
+				hour2Temp : parsed_json['hourly'][1]['temp'],
+				hour3Temp : parsed_json['hourly'][2]['temp'],
+				hour4Temp : parsed_json['hourly'][3]['temp'],
+				hour5Temp : parsed_json['hourly'][4]['temp'],
+				//Hourly Icon:
+				hour1Icon : parsed_json['hourly'][0]['weather'][0]['icon'],
+				hour2Icon : parsed_json['hourly'][1]['weather'][0]['icon'],
+				hour3Icon : parsed_json['hourly'][2]['weather'][0]['icon'],
+				hour4Icon : parsed_json['hourly'][3]['weather'][0]['icon'],
+				hour5Icon : parsed_json['hourly'][4]['weather'][0]['icon'],
+				//Daily Temp:
+				daily1Temp : parsed_json['daily'][0]['temp']['day'],
+				daily2Temp : parsed_json['daily'][1]['temp']['day'],
+				daily3Temp : parsed_json['daily'][2]['temp']['day'],
+				daily4Temp : parsed_json['daily'][3]['temp']['day'],
+				daily5Temp : parsed_json['daily'][4]['temp']['day'],
+				//Daily Icon:
+				daily1Icon : parsed_json['daily'][0]['weather'][0]['icon'],
+				daily2Icon : parsed_json['daily'][1]['weather'][0]['icon'],
+				daily3Icon : parsed_json['daily'][2]['weather'][0]['icon'],
+				daily4Icon : parsed_json['daily'][3]['weather'][0]['icon'],
+				daily5Icon : parsed_json['daily'][4]['weather'][0]['icon']
+
 			}
-		});      
+		});     
+	}
+
+	getUserCurrentLocation() {
+		//Perform some commands to get the user's current location.
+
+		if ("geolocation" in navigator) {
+			navigator.geolocation.getCurrentPosition((position) => {
+				this.setState({
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude,
+					lastUpdate: position.timestamp,
+					locationChanged: 1
+				});
+				console.log(position);
+			})
+		}
+		
 	}
 
 	// once the components are loaded, checks if the url bar has a path with "ipad" in it, if so sets state of tablet to be true
@@ -75,10 +124,16 @@ export default class App extends Component {
 		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
 	*/
 	render(){
+		if (this.state.locationChanged) {
+			this.fetchWeatherData();
+			this.setState({
+				locationChanged: 0
+			});
+		}
 		if(this.state.isTablet){
 			return (
 				<div id="app">
-					<Temperature/ >
+					<Temperature {...this.state.temperatureData} />;
 				</div>   				
 			);
 		} 
@@ -90,6 +145,8 @@ export default class App extends Component {
 			);
 		}
 	}
+
+
 
 
 }
