@@ -34,6 +34,7 @@ export default class App extends Component {
 			}
 		});
 		this.getUserCurrentLocation();
+		this.getUserCurrentLocation = this.getUserCurrentLocation.bind(this);
 	}
 
 	// a call to fetch weather data via wunderground
@@ -115,7 +116,7 @@ export default class App extends Component {
 	// 	}
 	// };
 
-	getUserCurrentLocation() {
+	getUserCurrentLocation = () => {
 		//Perform some commands to get the user's current location.
 
 		if ("geolocation" in navigator) {
@@ -170,7 +171,7 @@ export default class App extends Component {
 		else {
 			return (
 				<div id="app">
-					{Object.keys(this.state.responses.weather).length ? <Iphone {...this.state.responses.weather}/> : null}
+					{Object.keys(this.state.responses.weather).length ? <Iphone {...this.state.responses.weather} getUserCurrentLocation={this.getUserCurrentLocation}/> : null}
 				</div>
 			);
 		}

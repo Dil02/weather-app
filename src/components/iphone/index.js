@@ -33,22 +33,26 @@ export default class Iphone extends Component {
 			APIkey: "d7821ed13f437d8e5db4955a777c8a33",
 			locationChanged: 0
 		});
+		this.handleChangeClick = this.handleChangeClick.bind(this);
+	}
+
+	handleChangeClick(e) {
+		// console.log('this is:', this);
+		// console.log(e);
 	}
 
 	// the main render method for the iphone component
 	render() {
-		// check if temperature data is fetched, if so add the sign styling to the page
-		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-
 		// display all weather data
 		// change the style sheet for the max and min temperatures.
+		let windspeed = `${this.props.wind.speed}mph at ${this.props.wind.deg} degrees`;
 		return (
 			<div class={style.container}>
 				<div class={style.header}>
 					<div id="header" class={style.city}>
-						<img src={this.state.images.gps} onClick={() => this.getUserCurrentLocation()} style={{ "pointer-events": "all" }} />
+						<img src={this.state.images.gps/*change based on if user loc found or not */} onClick={() => this.props.getUserCurrentLocation()} style={{ "pointer-events": "all" }} />
 						{this.props.name}
-						<h6>Change (clickabble later)</h6>
+						<h6 onClick={(e) => this.handleChangeClick(e)}/*Make apparent this can be clicked on */>Change</h6>
 					</div>
 
 					<section class={style.section}>
@@ -58,14 +62,17 @@ export default class Iphone extends Component {
 						</div>
 						
 						<div class={style.conditions}>highest: {this.props.main.temp_max}  lowest: {this.props.main.temp_min} </div>
-						<div>Tips</div>
+						<img src={`http://openweathermap.org/img/wn/${this.props.weather[0].icon}@4x.png`} alt=''/>
+						<div>
+							Tips
+						</div>
 					</section>
 				</div>
 
 				<div class={style.footer}>
-					<Strip img={raindrop} text={"Precipitation:"} data={"123"}/>
-					<Strip img={wind} text={"Wind Speed:"} data={"123"}/>
-					<Strip img={information} text={"More information"} data={"123"}/>
+					<Strip img={raindrop} text={"Precipitation:"} data={"123"/* Data is conditional in the API response?*/}/>
+					<Strip img={wind} text={"Wind Speed:"} data={windspeed}/>
+					<Strip img={information} text={"More information"} data={"abc 123 abc 123 abc 123 abc 123 abc 123 "}/>
 				</div>
 				<div class={style.details}></div>
 				<div class={style_iphone.container}>
