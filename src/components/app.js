@@ -76,17 +76,17 @@ export default class App extends Component {
 				city: 'need to figure out how to display city using Onecall API',
 				currentTemp: parsed_json['current']['temp'],
 				//Hourly Temp:
-				hour1Temp: parsed_json['hourly'][0]['temp'],
-				hour2Temp: parsed_json['hourly'][1]['temp'],
-				hour3Temp: parsed_json['hourly'][2]['temp'],
-				hour4Temp: parsed_json['hourly'][3]['temp'],
-				hour5Temp: parsed_json['hourly'][4]['temp'],
+				hour1Temp: parsed_json['hourly'][this.getCurrentHour()]['temp'], //The function getCurrentHour() is used in order to access the correct index of the API response.
+				hour2Temp: parsed_json['hourly'][this.getCurrentHour()+1]['temp'],  //Incrementing getCurrentHour() allows us to retrieve the temperature for the next 4 hours.
+				hour3Temp: parsed_json['hourly'][this.getCurrentHour()+2]['temp'],
+				hour4Temp: parsed_json['hourly'][this.getCurrentHour()+3]['temp'],
+				hour5Temp: parsed_json['hourly'][this.getCurrentHour()+4]['temp'],
 				//Hourly Icon:
-				hour1Icon: parsed_json['hourly'][0]['weather'][0]['icon'],
-				hour2Icon: parsed_json['hourly'][1]['weather'][0]['icon'],
-				hour3Icon: parsed_json['hourly'][2]['weather'][0]['icon'],
-				hour4Icon: parsed_json['hourly'][3]['weather'][0]['icon'],
-				hour5Icon: parsed_json['hourly'][4]['weather'][0]['icon'],
+				hour1Icon: parsed_json['hourly'][this.getCurrentHour()]['weather'][0]['icon'],
+				hour2Icon: parsed_json['hourly'][this.getCurrentHour()+1]['weather'][0]['icon'],
+				hour3Icon: parsed_json['hourly'][this.getCurrentHour()+2]['weather'][0]['icon'],
+				hour4Icon: parsed_json['hourly'][this.getCurrentHour()+3]['weather'][0]['icon'],
+				hour5Icon: parsed_json['hourly'][this.getCurrentHour()+4]['weather'][0]['icon'],
 				//Daily Temp:
 				daily1Temp: parsed_json['daily'][0]['temp']['day'],
 				daily2Temp: parsed_json['daily'][1]['temp']['day'],
@@ -164,7 +164,9 @@ export default class App extends Component {
 		if (this.state.isTablet) {
 			return (
 				<div id="app">
-					<Temperature {...this.state.parsedtemperatureData} />;
+					<Temperature {...this.state.parsedtemperatureData}
+						getCurrentHour={() => this.getCurrentHour()}
+					/>;
 				</div>
 			);
 		}
@@ -175,6 +177,13 @@ export default class App extends Component {
 				</div>
 			);
 		}
+	}
+
+	//This function returns the current hour.
+	getCurrentHour()
+	{
+		var today = new Date();
+		return today.getHours();
 	}
 
 
