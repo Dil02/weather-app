@@ -1,4 +1,40 @@
+@font-face {
+    font-family: "PermanentMarker";
+    src        : local("PermanentMarker"),
+        url("../../fonts/PermanentMarker-Regular.ttf") format("truetype");
+    font-weight: bold;
+}
+.font_face_pm {
+    font-family   : "PermanentMarker";
+    letter-spacing: 0.05rem;
+}
+.color-red {
+	color: rgb(218, 69, 0);
+}
+
 .strip {
-    display: flex;
+    display        : flex;
     justify-content: space-between;
+    align-items    : center;
+
+    border       : 6px solid #FA9D13;
+    border-radius: 80px;
+    margin       : 1rem 0;
+
+    .stripLeft {
+        display: flex;
+        align-items: center;
+        font-size  : 1.1rem;
+
+        img {
+            margin-left: 0.75rem;
+            width      : auto;
+            height     : 48px;
+        }
+    }
+    
+    .stripRight {
+        .color-red();
+    }
+
 }

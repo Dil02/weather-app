@@ -1,5 +1,7 @@
 // import preact
 import { h, render, Component } from 'preact';
+
+import '../../fonts/PermanentMarker-Regular.ttf';
 // import stylesheets for ipad & button
 import style from './style';
 
@@ -18,11 +20,11 @@ export default class Strip extends Component {
 
         return (
             <div class={style.strip}>
-                <span>
+                <span class={style.stripLeft}>
                     <img src={this.props.img} alt='' />
-                    <p>{this.props.text}</p>
+                    <p className={style.font_face_pm}>{this.props.text}</p>
                 </span>
-                <span>
+                <span class={style.stripRight}>
                     <p>{this.props.data}</p>
                 </span>
 

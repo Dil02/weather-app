@@ -7,6 +7,8 @@ import style from './style';
 export default class Temperature extends Component {
 
     //Renders the temperature screen.
+
+
     render(){
         return(
             <div class={ style.container }>
@@ -41,6 +43,11 @@ export default class Temperature extends Component {
                             <img src={"http://openweathermap.org/img/w/"+this.props.hour5Icon+".png"}></img>
                             <p>{this.getCurrentHour(4)}:00</p>
                         </li>
+                    {Object.keys(this.props.hoursTemps).length ?
+                        this.props.hoursTemps.map((value, index) => {
+                            return <li><p>{value}</p><img src={`http://openweathermap.org/img/w/${this.props.hoursIcons[index]}.png`}></img></li>
+                        })
+                        : null}
                     </ul>
                 </section>
                 <footer>
