@@ -76,7 +76,7 @@ export default class CitySelect extends Component {
 
                 {cities.map((val) => {
                     return (
-                        <section onClick={() => this.handleChange(val.county)}>
+                        <section className={style.city} onClick={() => this.handleChange(val.county)}>
                             <h3>{val.county}</h3>
                             <p>{val.country}</p>
                             <button type="button" id='deleteButton' name="deleteButton" onClick={(e) => this.handleRemove(e, val.key)}>Delete</button>
