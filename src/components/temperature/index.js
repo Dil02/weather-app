@@ -11,63 +11,63 @@ export default class Temperature extends Component {
         return(
             <div class={ style.container }>
                 <header>
-                    <h2 id="return" style="color: #fa9d13;">&#8592;</h2>
-                    <h3>{this.props.city}</h3>
+                    <h2 id={style.return} style="color: #fa9d13;">&#8592;</h2>
+                    <h3 id={style.city}>{this.props.city}</h3>
                 </header>
-                <section>
+                <section id={style.hourInfoMain}>
                     <ul>
-                        <li class={style.hourInfo}>
+                        <li class={style.hourInfo} id={style.currentTemp}>
                             <p class={style.hourlyTemp}>{this.props.hour1Temp}&#8451;</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.hour1Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.hour1Icon+".png"}></img>
                             <p>{this.getCurrentHour(0)}:00</p>
                         </li>
                         <li class={style.hourInfo}>
                             <p class={style.hourlyTemp}>{this.props.hour2Temp}&#8451;</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.hour2Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.hour2Icon+".png"}></img>
                             <p>{this.getCurrentHour(1)}:00</p>
                         </li>
                         <li class={style.hourInfo}>
                             <p class={style.hourlyTemp}>{this.props.hour3Temp}&#8451;</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.hour3Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.hour3Icon+".png"}></img>
                             <p>{this.getCurrentHour(2)}:00</p>
                         </li>
                         <li class={style.hourInfo}>
                             <p class={style.hourlyTemp}>{this.props.hour4Temp}&#8451;</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.hour4Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.hour4Icon+".png"}></img>
                             <p>{this.getCurrentHour(3)}:00</p>
                         </li>
                         <li class={style.hourInfo}>
                             <p class={style.hourlyTemp}>{this.props.hour5Temp}&#8451;</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.hour5Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.hour5Icon+".png"}></img>
                             <p>{this.getCurrentHour(4)}:00</p>
                         </li>
                     </ul>
                 </section>
-                <footer>
+                <footer id={style.dayInfoMain}>
                     <ul>
                         <li class={style.dayInfo}>
                             <p class={style.date}>{this.dayOfWeek(1)}</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.daily1Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.daily1Icon+".png"}></img>
                             <p class={style.dailyTemp}>{this.props.daily1Temp}&#8451;</p>
                         </li>
                         <li class={style.dayInfo}>
                             <p class={style.date}>{this.dayOfWeek(2)}</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.daily2Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.daily2Icon+".png"}></img>
                             <p class={style.dailyTemp}>{this.props.daily2Temp}&#8451;</p>
                         </li>
                         <li class={style.dayInfo}>
                             <p class={style.date}>{this.dayOfWeek(3)}</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.daily3Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.daily3Icon+".png"}></img>
                             <p class={style.dailyTemp}>{this.props.daily3Temp}&#8451;</p>
                         </li>
                         <li class={style.dayInfo}>
                             <p class={style.date}>{this.dayOfWeek(4)}</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.daily4Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.daily4Icon+".png"}></img>
                             <p class={style.dailyTemp}>{this.props.daily4Temp}&#8451;</p>
                         </li>
                         <li class={style.dayInfo}>
                             <p class={style.date}>{this.dayOfWeek(5)}</p>
-                            <img src={"http://openweathermap.org/img/w/"+this.props.daily5Icon+".png"}></img>
+                            <img src={"http://openweathermap.org/img/wn/"+this.props.daily5Icon+".png"}></img>
                             <p class={style.dailyTemp}>{this.props.daily5Temp}&#8451;</p>
                         </li>
                     </ul>

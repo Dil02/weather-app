@@ -4,9 +4,11 @@ import { h, Component } from 'preact';
 // import required Components from 'components/'
 import Iphone from './iphone';
 import Ipad from './ipad';
-import Temperature from './temperature';
+//import Temperature from './temperature';
 import gpsUnlocated from '../assets/icons/gpsUnlocated.png'
 import gpsLocated from '../assets/icons/gps.png'
+import Clothing from './clothing';
+
 
 const APICALLS = {
 	ONECALL: "onecall",
@@ -28,6 +30,7 @@ export default class App extends Component {
 			APIkey: "d7821ed13f437d8e5db4955a777c8a33",
 			locationChanged: 0,
 			parsedtemperatureData: {},
+			clothingItems: [],
 			responses: {
 				weather: {},
 				onecall: {}
@@ -54,6 +57,9 @@ export default class App extends Component {
 					
 				});
 				APIname == APICALLS.ONECALL ? this.parseResponse(response) : null;
+				this.setState({
+					clothingItems: this.generateClothing()
+				})
 				//Debug
 				console.log(APIname);
 				console.log(response);
@@ -65,22 +71,15 @@ export default class App extends Component {
 	parseResponse(parsed_json) {
 		// set states for fields so they could be rendered later on
 		this.setState({
-			// location: parsed_json['city']['name'],
-			// temperatureC: parsed_json['list']['0']['main']['temp'],
-			// conditions : parsed_json['weather']['0']['description'],
-			// maxTemperature : parsed_json['main']['temp_max'],
-			// minTemperature : parsed_json['main']['temp_min'],
-			// wind_speed : parsed_json['wind']['speed'],
-			// precipitation : parsed_json.list,
 			parsedtemperatureData: {
-				city: 'need to figure out how to display city using Onecall API',
+				city: 'need to get city from API.',
 				currentTemp: parsed_json['current']['temp'],
 				//Hourly Temp:
-				hour1Temp: parsed_json['hourly'][this.getCurrentHour()]['temp'], //The function getCurrentHour() is used in order to access the correct index of the API response.
-				hour2Temp: parsed_json['hourly'][this.getCurrentHour()+1]['temp'],  //Incrementing getCurrentHour() allows us to retrieve the temperature for the next 4 hours.
-				hour3Temp: parsed_json['hourly'][this.getCurrentHour()+2]['temp'],
-				hour4Temp: parsed_json['hourly'][this.getCurrentHour()+3]['temp'],
-				hour5Temp: parsed_json['hourly'][this.getCurrentHour()+4]['temp'],
+				hour1Temp: Math.round(parsed_json['hourly'][this.getCurrentHour()]['temp']), //The function getCurrentHour() is used in order to access the correct index of the API response.
+				hour2Temp: Math.round(parsed_json['hourly'][this.getCurrentHour()+1]['temp']),  //Incrementing getCurrentHour() allows us to retrieve the temperature for the next 4 hours.
+				hour3Temp: Math.round(parsed_json['hourly'][this.getCurrentHour()+2]['temp']),
+				hour4Temp: Math.round(parsed_json['hourly'][this.getCurrentHour()+3]['temp']),
+				hour5Temp: Math.round(parsed_json['hourly'][this.getCurrentHour()+4]['temp']),
 				//Hourly Icon:
 				hour1Icon: parsed_json['hourly'][this.getCurrentHour()]['weather'][0]['icon'],
 				hour2Icon: parsed_json['hourly'][this.getCurrentHour()+1]['weather'][0]['icon'],
@@ -88,20 +87,23 @@ export default class App extends Component {
 				hour4Icon: parsed_json['hourly'][this.getCurrentHour()+3]['weather'][0]['icon'],
 				hour5Icon: parsed_json['hourly'][this.getCurrentHour()+4]['weather'][0]['icon'],
 				//Daily Temp:
-				daily1Temp: parsed_json['daily'][0]['temp']['day'],
-				daily2Temp: parsed_json['daily'][1]['temp']['day'],
-				daily3Temp: parsed_json['daily'][2]['temp']['day'],
-				daily4Temp: parsed_json['daily'][3]['temp']['day'],
-				daily5Temp: parsed_json['daily'][4]['temp']['day'],
+				daily1Temp: Math.round(parsed_json['daily'][0]['temp']['day']),
+				daily2Temp: Math.round(parsed_json['daily'][1]['temp']['day']),
+				daily3Temp: Math.round(parsed_json['daily'][2]['temp']['day']),
+				daily4Temp: Math.round(parsed_json['daily'][3]['temp']['day']),
+				daily5Temp: Math.round(parsed_json['daily'][4]['temp']['day']),
 				//Daily Icon:
 				daily1Icon: parsed_json['daily'][0]['weather'][0]['icon'],
 				daily2Icon: parsed_json['daily'][1]['weather'][0]['icon'],
 				daily3Icon: parsed_json['daily'][2]['weather'][0]['icon'],
 				daily4Icon: parsed_json['daily'][3]['weather'][0]['icon'],
 				daily5Icon: parsed_json['daily'][4]['weather'][0]['icon']
-
+				
 			}
+			
+			
 		});
+		
 	}
 
 	// parseWeatherData(response) {
@@ -152,7 +154,7 @@ export default class App extends Component {
 		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
 	*/
 	render() {
-
+		
 		if (this.state.locationChanged) {
 			this.fetchWeatherData(APICALLS.WEATHER);
 			this.fetchWeatherData(APICALLS.ONECALL);
@@ -163,10 +165,18 @@ export default class App extends Component {
 		}
 		if (this.state.isTablet) {
 			return (
-				<div id="app">
-					<Temperature {...this.state.parsedtemperatureData}
-						getCurrentHour={() => this.getCurrentHour()}
-					/>;
+				// <div id="app">
+				// 	<Temperature {...this.state.parsedtemperatureData} 
+				// 		getCurrentHour={() => this.getCurrentHour()}
+				// 	/>
+				// </div>
+
+				//I commented out Temperature in order to work on Clothing.
+				//Make sure to comment in and out the respective style sheets at the top to display the components.
+				
+				<div id="app"> 
+					<Clothing clothingItems={this.state.clothingItems}
+					/>
 				</div>
 			);
 		}
@@ -179,12 +189,60 @@ export default class App extends Component {
 		}
 	}
 
+
 	//This function returns the current hour.
 	getCurrentHour()
 	{
 		var today = new Date();
 		return today.getHours();
 	}
+
+	//This function returns an array containing clothing items which are suitable for the user based on the current weather conditions provided by the API response.
+	generateClothing()
+    {
+		//This inventory array contains the clothing items as objects with fields such as name and description.
+        const clothesInventory =[
+            {name : "Base Layer", minTemp: -50, maxTemp : 14, minWind : 1, precipitation : 0, url : "base layer.png", desc: "Keep yourself insulated with multiple thin layers."},
+            {name : "Glasses", minTemp: -50, maxTemp : 35, minWind : 5, precipitation : 10, url : "glasses.png", desc : "Protect against dust and insects."},
+            {name : "Gloves",  minTemp: -50, maxTemp : 7, minWind : 1, precipitation: 0, url : "gloves.png", desc : "Keeping your hands warm."},
+            {name : "Helmet", minTemp: -51, maxTemp : 35, minWind : 0, precipitation: 0, url : "helmet.png", desc : "An essential to protect your head."},
+            {name : "Winter Jacket", minTemp: -50, maxTemp: 11, minWind : 1, precipitation: 0, url : "jacket.png", desc : "Insulate your upper body with a quality winter jacket."},
+            {name : "Raincoat", minTemp: 12, maxTemp: 28, minWind : 0, precipitation: 20, url : "raincoat.png", desc : "Keep yourself dry with a lightweight rain jacket."},
+            {name : "Scarf", minTemp: -50, maxTemp: 10, minWind: 3, precipitation: 0, url : "scarf.png", desc : "Prevent the chill getting any further with a scarf."},
+            {name : "T-Shirt", minTemp: 15, maxTemp: 35, minWind:0, precipitation: 0, url : "shirt.png", desc : "A light layer to keep you cool in these warmer conditions."},
+            {name : "Shorts", minTemp: 7, maxTemp: 35, minWind:0, precipitation: 0, url : "short.png", desc : "Why not wear a pair of shorts for your ride."},
+            {name : "Water Bottle", minTemp: -51, maxTemp: 40, minWind:0, precipitation: 0, url: "water.png", desc : "Remember to keep hydrated!"},
+            {name : "Waterproof Trousers", minTemp: -50, maxTemp: 35, minWind:0, precipitation:20, url : "waterproof.png", desc : "Keep yourself dry with a lightweight pair of waterproof trousers."},
+            {name : "Winter Hat", minTemp: -50, maxTemp: 13, minWind : 1, precipitation : 0, url : "winter-hat.png", desc: "Keeping your ears and head warm."}
+        ];
+
+		//Get windSpeed and precipitation from the API.
+		//Hard Coded Wind Speed and Precipitation:
+		let currentTemp = this.state.parsedtemperatureData.currentTemp;
+		let windSpeed = 5;
+		let precipitation = 10;
+
+		const clothes=[];
+
+		//Based on the current weather conditions, the for loop below iterates through the inventory to check if an item is suitable for recommendation.
+
+        for(let i=0; i<clothesInventory.length; i++)
+        {
+            if(currentTemp>=clothesInventory[i].minTemp && currentTemp <=clothesInventory[i].maxTemp) //Checks if the current weather is between min and max temp of the item.
+            {
+                if(windSpeed >= clothesInventory[i].minWind)// Checks wind speed.
+                {
+                    if(precipitation >= clothesInventory[i].precipitation) // checks precipitation levels.
+                    {
+                        console.log(clothesInventory[i].name);
+						clothes.push(clothesInventory[i]); // Pushes the item if it is suitable, to a clothes array.
+                    }
+                }
+            }
+        }
+		return clothes; //Returns an array containing items which can be recommended to the user.
+
+    }
 
 
 
