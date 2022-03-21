@@ -2,6 +2,8 @@
 
 @import 'reset.less';
 
+//This styling sheet is used for the night mode of the Temperature component.
+
 //Defines the main element which will contain all the other elements.
 .containerT { 
 	display: flex;
@@ -12,8 +14,8 @@
 	padding-top: 20px; //Changed from 80px.
 	margin: 0 auto;
     border: solid thin black;
-    //background-color: peachpuff;
-    background-image: linear-gradient(peachpuff,orange);
+    background-image: url("../../assets/backgrounds/stars.jpg");
+    background-size: 100% 100%;
 }
 
 //Styles the header.
@@ -32,7 +34,7 @@
 
 //Styles the city name.
 #cityT{
-    color: black;
+    color: white;
     display: inline;
 }
 
@@ -43,6 +45,7 @@
     padding-bottom: 0.5em;
     font-family: Arial, Helvetica, sans-serif;
     padding-top: 1em;
+    color: white;
 }
 
 //Styles the <footer> tag containing the weather info for the next 5 days.
@@ -50,6 +53,7 @@
     margin-top: 4em;
     margin-left: 1.5em;
     margin-right: 1.5em;
+    color: white;
 }
 
 //Removes the styling of the unordered lists.
