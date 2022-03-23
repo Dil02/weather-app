@@ -4,10 +4,8 @@ import { h, render, Component } from 'preact';
 import style from './style';
 
 //icons
-import information from "../../assets/icons/information.png";
-import raindrop from "../../assets/icons/raindrop.png";
-import wind from "../../assets/icons/wind.png";
-import { error } from 'jquery';
+import remove from "../../assets/icons/remove.png";
+import leftArrow from "../../assets/icons/left-arrow-white.png";
 
 export default class CitySelect extends Component {
     // a constructor with initial set states
@@ -15,75 +13,109 @@ export default class CitySelect extends Component {
         super(props);
         this.setState({
             //Some random cities to populate the list
-            cities: [{ key: this.key(), county: 'London', country: 'GB' },
-            { key: this.key(), county: 'Paris', country: 'FR' },
-            { key: this.key(), county: 'Dubai', country: 'AE' },
-            { key: this.key(), county: 'Beijing', country: 'CN' }],
+            isButtonDisabled: true,
+            cities: [...this.props.cities],
             userInputtedCity: null
         });
+    }
+
+    componentWillUnmount() {
+        //Save the cities in the parent's state
+        this.props.updateCities(this.state.cities);
     }
 
     key() {
         return Math.random() * 9999;
     }
 
-    handleUpdate = (e) => {
+    goToHome = () => {
+        this.props.switchPageTo(this.props.PAGES.HOME);
+    }
+
+    handleAddCity = async (e) => {
+
+        if (!this.state.userInputtedCity) { return }
+        this.setState({ isButtonDisabled: true });
+
+        this.props.fetchGeoCoordinates(this.state.userInputtedCity)
+            .then((response) => {
+
+                this.setState({
+                    cities: [{ key: this.key(), county: response[0].name, country: response[0].country }
+                        , ...this.state.cities],
+                    userInputtedCity: ""
+                });
+                console.log(response);
+
+            }, (error) => {
+
+                alert(error);
+                console.error(error);
+
+            })
+            .finally(() => this.setState({ isButtonDisabled: false }));
+    }
+
+    handleUpdateState = (e) => {
+        if (e.target.value == "") {
+            this.setState({ isButtonDisabled: true });
+        } else {
+            this.setState({ isButtonDisabled: false });
+        }
         this.setState({
             [e.target.name]: e.target.value
         });
     }
 
-    handleSearch = async (e) => {
-        if (!this.state.userInputtedCity) { return }
-
-        this.props.fetchGeoCoordinates(this.state.userInputtedCity)
-        .then((response) => {
-
-            this.setState({
-                cities: [...this.state.cities,
-                { key: this.key(), county: response[0].name, country: response[0].country }]
-            });
-            console.log(response);
-
-        }, (error) => {
-
-            alert(error);
-            console.error(error);
-
-        });
+    handleChangeCity = (county) => {
+        this.props.setLocationByName(county);
+        this.props.switchPageTo(this.props.PAGES.HOME);
     }
 
-    handleRemove = (e, key) => {
+    handleRemoveCity = (e, key) => {
+        e.stopPropagation();
         this.setState({
             cities: this.state.cities.filter((v) => v.key != key)
         });
     }
 
-    handleChange = (county) => {
-        this.props.setLocationByName(county);
-    }
-
     render() {
         let cities = this.state.cities;
-        console.log(this.state);
         return (
-            <div>
-                <label for='citysearch'>Enter a city, area, district, etcetera:</label>
-                <input type='search' id={style.citysearch} name='userInputtedCity'
-                    onInput={(e) => this.handleUpdate(e)}
-                    onKeyDown={(e) => { e.key == "Enter" ? this.handleSearch(e) : null }} />
-                <input type='button' value="Add City" onClick={(e) => this.handleSearch(e)} />
+            <div className={style.container}>
 
-                {cities.map((val) => {
-                    return (
-                        <section className={style.city} onClick={() => this.handleChange(val.county)}>
-                            <h3>{val.county}</h3>
-                            <p>{val.country}</p>
-                            <button type="button" id='deleteButton' name="deleteButton" onClick={(e) => this.handleRemove(e, val.key)}>Delete</button>
-                        </section>
-                    )
-                })}
+                <div className={style.title}>
+                    <img id={style.backArrow} onClick={this.goToHome} src={leftArrow} />
+                    <label className={style.citysearchLabel} for='userInputtedCity'>Enter a city, area, district, etcetera:</label>
+                </div>
+
+                <div className={style.citysearchBox}>
+                    <input type='search' id={style.citysearch} name='userInputtedCity'
+                        value={this.state.userInputtedCity}
+                        onInput={(e) => this.handleUpdateState(e)}
+                        onKeyDown={(e) => { e.key == "Enter" ? this.handleAddCity(e) : null }} />
+                    <input type='button' id={style.addcitybutton} value="Add City"
+                        onClick={(e) => this.handleAddCity(e)} disabled={this.state.isButtonDisabled} />
+                </div>
+
+                {this.displayCities(cities)}
+
             </div>
         );
+    }
+
+    displayCities = (cities) => {
+        return cities.map((val) => {
+            return (
+                <div key={val.key} className={style.city} onClick={() => this.handleChangeCity(val.county)}>
+                    <div>
+                        <h2>{val.county}</h2>
+                        <p>{val.country}</p>
+                    </div>
+                    <img className={style.removeIcon} src={remove} alt="deleteButton" onClick={(e) => this.handleRemoveCity(e, val.key)} />
+                    {/* <button type="button" id='deleteButton' name="deleteButton" onClick={}>Delete</button> */}
+                </div>
+            )
+        });
     }
 }
