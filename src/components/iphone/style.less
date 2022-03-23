@@ -16,6 +16,31 @@
 	margin          : 0 auto;
 	background-color: #fa9d13;
 }
+.nightBg {
+	background-image: url("../../assets/backgrounds/stars.jpg");
+    background-size: 100% 100%;
+}
+.rainBg {
+	background-image: url("../../assets/backgrounds/rain-ipad.jpg");
+    background-size: 100% 100%;
+}
+.clearBg {
+	background-image: url("../../assets/backgrounds/clear-iphone.jpg");
+    background-size: 100% 100%;
+}
+
+// .containerT { 
+// 	display: flex;
+// 	flex-direction: column;
+// 	width: 414px;
+// 	height: 736px;
+// 	text-align: center;
+// 	padding-top: 20px; //Changed from 80px.
+// 	margin: 0 auto;
+//     border: solid thin black;
+//     background-image: url("../../assets/backgrounds/stars.jpg");
+//     background-size: 100% 100%;
+// }
 
 .header {
 	display          : flex;
@@ -42,12 +67,14 @@
 	.cityName {
 		font-weight: 300;
 		line-height: 1;
+		filter: invert(37%) sepia(88%) saturate(1896%) hue-rotate(1deg) brightness(103%) contrast(107%);
 	}
 
 	.countryCode {
 		font-weight: 900;
 		font-size  : 1.2rem;
 		text-align : right;
+		color: #b34100;
 	}
 
 	.addcityicon {
@@ -63,6 +90,7 @@
 		height: auto;
 		width : 32px;
 		cursor: pointer;
+		filter: invert(24%) sepia(86%) saturate(1643%) hue-rotate(7deg) brightness(102%) contrast(102%);
 	}
 }
 

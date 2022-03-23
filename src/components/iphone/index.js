@@ -5,9 +5,6 @@ import style from './style';
 //fonts
 import '../../fonts/Bitter-VariableFont_wght.ttf';
 //import components -->
-//Temperature component
-import Temperature from '../temperature';
-//Strip component
 import Strip from '../strip';
 
 //icons
@@ -16,28 +13,28 @@ import gpsLocated from '../../assets/icons/gpsLocated.png';
 import plus from "../../assets/icons/plus.png";
 
 import danger from "../../assets/icons/danger.png";
-
-import information from "../../assets/icons/information.png";
-import raindrop from "../../assets/icons/raindrop.png";
-import wind from "../../assets/icons/wind.png";
+import informationIcon from "../../assets/icons/information.png";
+import raindropIcon from "../../assets/icons/raindrop.png";
+import windIcon from "../../assets/icons/wind.png";
 import humidityIcon from "../../assets/icons/humidity.png";
+import fashionIcon from "../../assets/icons/fashion-designer.png";
 
 export default class Iphone extends Component {
 
-	// a constructor with initial set states
 	constructor(props) {
 		super(props);
 		this.parseProps(this.props);
 	}
 
+	//Runs before the render method.
 	componentWillReceiveProps(nextProps) {
 		this.parseProps(nextProps);
-
 	}
 
+	//A function to extract and compute data from the props and place it into this Component's state.
 	parseProps = (props) => {
 		let windspeed = roundToNearestHalf(props.wind.speed);
-		let direction = degToCompass(props.wind.deg);
+		let direction = degreesToCompass(props.wind.deg);
 
 		this.setState({
 			windspeedL: `${windspeed}mph from the ${direction}`,
@@ -62,11 +59,15 @@ export default class Iphone extends Component {
 		});
 	}
 
+	//This function changes the screen of the app.
 	switchPageTo = (page) => {
 		this.props.switchPageTo(page);
 	}
 
+	// Returns an array of tips that may be displayed in the "tips" section.
 	selectTip() {
+		//Each tip is composed of an array of object comprising of; 
+		// the tip-text and conditions that must be met in order for the tip to be displayed.
 		let weatherConditionTips = [
 			{
 				minWind: undefined, minimumUVI: 6, minRain: undefined,
@@ -107,6 +108,7 @@ export default class Iphone extends Component {
 			}
 		];
 
+		// An array of safety tips, not based on weather conditions.
 		let safetyTips = [
 			"Remember to wear a helmet.",
 			"Obey traffic lights and signs.",
@@ -119,7 +121,7 @@ export default class Iphone extends Component {
 			"Check your bicycle is in good condition, including brake pads and tyres."
 		];
 
-		//Check which tips meet the conditions to be shown to the user.
+		//Check which tips meet the weather conditions to be shown to the user.
 		weatherConditionTips = weatherConditionTips.filter(v => {
 
 			if (this.props.snow) {
@@ -149,14 +151,8 @@ export default class Iphone extends Component {
 		});
 		weatherConditionTips = weatherConditionTips.map(v => v.tip);
 
-		//Current time in unix format	
-		let now = Date.now();
-		//Current time is before sunrise
-		let isBeforeSunrise = now < this.state.sunriseTimeUnix;
-		//Current time is after sunset
-		let isAfterSunset = now > this.state.sunsetTimeUnix;
-
-		if (isBeforeSunrise || isAfterSunset) {
+		//Checks if it is currently night time.
+		if (this.props.isNightTime) {
 			safetyTips.push(...[
 				"When travelling at night let a friend or relative know your destination and likely time of arrival.",
 				"Remember to switch-on your front and rear bicycle lights at night.",
@@ -164,12 +160,12 @@ export default class Iphone extends Component {
 			]);
 		}
 		let combinedTips = [...weatherConditionTips, ...safetyTips];
-		let randomTip = combinedTips[getRandomIntInclusive(0, combinedTips.length - 1)];
+		let randomTip = combinedTips[getRandomIntInclusive(0, combinedTips.length - 1)]; //Randomly select a tip to display.
 
 		return randomTip;
 	}
 
-	// the main render method for the iphone component
+	//The main render method for the iphone component
 	render() {
 		let tip = this.selectTip();
 		// Extract all the pertinent data from the returned JSON data
@@ -187,10 +183,19 @@ export default class Iphone extends Component {
 		} else {
 			rain1h = "0";
 		}
-		console.log(this.props);
-		console.log(this.state);
+		
+		// Set the background image according to weather conditions.
+		let bgImage;
+		if (this.props.isNightTime) {
+			bgImage = style.nightBg;
+		} else if (this.props.rain) {
+			bgImage = style.rainBg;
+		} else {
+			bgImage = style.clearBg;
+		}
+
 		return (
-			<div class={style.container}>
+			<div class={`${style.container} ${bgImage}`}>
 				<div class={style.header}>
 					{/* Displays the area name and "add a city" button */}
 					<div id="header" class={style.city}>
@@ -237,6 +242,7 @@ export default class Iphone extends Component {
 							</div>
 						</div>
 
+						{/* Main weather icon (Sun, Moon, Clouds) */}
 						<img className={style.weather_icon} src={`http://openweathermap.org/img/wn/${this.props.weather[0].icon}@4x.png`} alt='' />
 
 						<div className={style.tips}>
@@ -252,13 +258,14 @@ export default class Iphone extends Component {
 					</section>
 				</div>
 
+				{/* Section with horizonal stripes of information */}
 				<div class={style.footer}>
-					<Strip img={raindrop} text={"Precipitation:"} data={`${rain1h}mm/h`} />
+					<Strip img={raindropIcon} text={"Precipitation:"} data={`${rain1h}mm/h`} />
 					<Strip img={humidityIcon} text={"Humidity:"} data={`${humidity}%`} />
-					<Strip img={wind} text={"Wind Speed:"} data={windspeed} />
-					<Strip img={information} text={"More information!"} data={"Future forcasts"}
+					<Strip img={windIcon} text={"Wind Speed:"} data={windspeed} />
+					<Strip img={informationIcon} text={"More information!"} data={"Future forcasts"}
 						onClick={() => this.switchPageTo(this.props.PAGES.TEMPERATURE)} />
-					<Strip img={information} text={"Get Cool clothing!"} data={"Click here"}
+					<Strip img={fashionIcon} text={"Get Cool clothing!"} data={"Click here"}
 						onClick={() => this.switchPageTo(this.props.PAGES.CLOTHING)} />
 				</div>
 			</div>
@@ -276,7 +283,7 @@ function getRandomIntInclusive(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the min
 }
 
-function degToCompass(num) {
+function degreesToCompass(num) {
 	var val = Math.floor((num / 45) + 0.5);
 	// var arr = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
 	var arr = ["North", "North East", "East", "South East", "South", "South West", "West", "North West"];

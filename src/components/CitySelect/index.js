@@ -12,7 +12,6 @@ export default class CitySelect extends Component {
     constructor(props) {
         super(props);
         this.setState({
-            //Some random cities to populate the list
             isButtonDisabled: true,
             cities: [...this.props.cities],
             userInputtedCity: null
@@ -20,18 +19,16 @@ export default class CitySelect extends Component {
     }
 
     componentWillUnmount() {
-        //Save the cities in the parent's state
+        //Save the list of cities in the parent's state
         this.props.updateCities(this.state.cities);
-    }
-
-    key() {
-        return Math.random() * 9999;
     }
 
     goToHome = () => {
         this.props.switchPageTo(this.props.PAGES.HOME);
     }
 
+    //Check if the city exists by attempting to GET its coordinates
+    // If it exists then add it to the list of cities.
     handleAddCity = async (e) => {
 
         if (!this.state.userInputtedCity) { return }
@@ -39,9 +36,9 @@ export default class CitySelect extends Component {
 
         this.props.fetchGeoCoordinates(this.state.userInputtedCity)
             .then((response) => {
-
+                console.log(this.props);
                 this.setState({
-                    cities: [{ key: this.key(), county: response[0].name, country: response[0].country }
+                    cities: [{ key: this.props.keygen(), county: response[0].name, country: response[0].country }
                         , ...this.state.cities],
                     userInputtedCity: ""
                 });
@@ -56,6 +53,8 @@ export default class CitySelect extends Component {
             .finally(() => this.setState({ isButtonDisabled: false }));
     }
 
+    //This function runs every time the text in the city search textbox changes.
+    //The value of is updated to match the value in the textbox.
     handleUpdateState = (e) => {
         if (e.target.value == "") {
             this.setState({ isButtonDisabled: true });
@@ -67,11 +66,13 @@ export default class CitySelect extends Component {
         });
     }
 
+    // Sets the weather conditions to a new city.
     handleChangeCity = (county) => {
         this.props.setLocationByName(county);
         this.props.switchPageTo(this.props.PAGES.HOME);
     }
 
+    //Removes a city from the list.
     handleRemoveCity = (e, key) => {
         e.stopPropagation();
         this.setState({
@@ -81,14 +82,29 @@ export default class CitySelect extends Component {
 
     render() {
         let cities = this.state.cities;
+
+        // Set the background image according to weather conditions.
+		let bgImage;
+		if (this.props.isNightTime) {
+			bgImage = style.nightBg;
+		} else if (this.props.rain) {
+			bgImage = style.rainBg;
+		} else {
+			bgImage = style.clearBg;
+		}
+
         return (
-            <div className={style.container}>
+            <div className={`${style.container} ${bgImage}`}>
+
+                {/* Title section */}
 
                 <div className={style.title}>
                     <img id={style.backArrow} onClick={this.goToHome} src={leftArrow} />
                     <label className={style.citysearchLabel} for='userInputtedCity'>Enter a city, area, district, etcetera:</label>
                 </div>
 
+                {/* Search box section */}
+                
                 <div className={style.citysearchBox}>
                     <input type='search' id={style.citysearch} name='userInputtedCity'
                         value={this.state.userInputtedCity}
@@ -104,6 +120,7 @@ export default class CitySelect extends Component {
         );
     }
 
+    // Maps the array of cities into a human-readable list of cities.
     displayCities = (cities) => {
         return cities.map((val) => {
             return (
@@ -113,7 +130,6 @@ export default class CitySelect extends Component {
                         <p>{val.country}</p>
                     </div>
                     <img className={style.removeIcon} src={remove} alt="deleteButton" onClick={(e) => this.handleRemoveCity(e, val.key)} />
-                    {/* <button type="button" id='deleteButton' name="deleteButton" onClick={}>Delete</button> */}
                 </div>
             )
         });

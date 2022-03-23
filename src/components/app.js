@@ -22,9 +22,8 @@ const PAGES = {
 }
 
 export default class App extends Component {
-	//var App = React.createClass({
 
-	// a constructor with initial set states
+	// a constructor with initial values for state.
 	constructor(props) {
 		super(props);
 		this.setState({
@@ -46,8 +45,8 @@ export default class App extends Component {
 		this.refreshWeatherData();
 	}
 
+	//Periodically set the refresh-bit in the state to true, so the weather data is updated from the API.
 	refreshWeatherData = () => {
-		//Periodically re-call the API so the weather data is up to date with the current weather conditions.
 		setTimeout(() => {
 
 			if (this.state.isUsersCurrentLocation) {
@@ -61,6 +60,7 @@ export default class App extends Component {
 		}, 1000 * 600);
 	}
 
+	//Get ans sets the app's location from the user's current position (latitude and longitude).
 	setLocationByUsersCurrentPosition = () => {
 		if ("geolocation" in navigator) {
 			navigator.geolocation.getCurrentPosition((position) => {
@@ -86,6 +86,7 @@ export default class App extends Component {
 			});
 	}
 
+	//Sets the app's current location with coordinates.
 	setLocationByCoords = (latitude, longitude, isUsersCurrentLocation = false) => {
 		this.setState({
 			latitude: latitude,
@@ -95,7 +96,7 @@ export default class App extends Component {
 		});
 	}
 
-	//A function that converts city or town names into latitude and longitude coordinates.
+	//A function that converts city or town names into latitude and longitude coordinates. Returns a Promise.
 	fetchGeoCoordinates = (cityName, countryCode = null) => {
 		const APIkey = this.state.APIkey;
 		let response = null;
@@ -123,7 +124,7 @@ export default class App extends Component {
 		// if (stateCode) {}
 	}
 
-	// a call to fetch weather data via wunderground
+	//A function to get weather data for a location ia wunderground. Returns a Promise.
 	fetchWeatherData(APIname) {
 		let latitude = this.state.latitude;
 		let longitude = this.state.longitude;
@@ -141,24 +142,41 @@ export default class App extends Component {
 			}));
 	}
 
+	//This function changes the screen of the app.
 	switchPageTo = (page) => {
 		// window.location.href = window.location.origin + page;
 		this.setState({ currentPage: page });
 	}
 
+	//Simple random number gen.
 	key = () => {
 		return Math.random() * 9999;
 	}
 
+	isNightTime = () => {
+		if (!this.state.weather) { return false }
+
+		//Current time in unix format	
+		let now = Date.now();
+		//Current time in unix format before sunrise
+		let isBeforeSunrise = now < (this.state.responses.weather.sys.sunrise * 1000);
+		//Current time in unix format after sunset
+		let isAfterSunset = now > (this.state.responses.weather.sys.sunset * 1000);
+		
+		return isBeforeSunrise || isAfterSunset;
+	}
+
 	/*
-		A render method to display the required Component on screen (iPhone or iPad) : selected by checking component's isTablet state
+		A render method to display a Component on screen :
+		The component to display is selected by checking the value of currentPage in state.
 	*/
 	render() {
 
-		//Gets data from the API(s) and set it in state, if the data needs refreshing.
+		//Gets data from the API(s) and writes it to the state.
+		//Will only run if the data needs to be refreshed.
 		if (this.state.refreshAPI) {
 			Promise.all([this.fetchWeatherData(APICALLS.WEATHER),
-				this.fetchWeatherData(APICALLS.ONECALL)])
+			this.fetchWeatherData(APICALLS.ONECALL)])
 				.then((responses) => {
 					this.setState({
 						responses: {
@@ -175,9 +193,12 @@ export default class App extends Component {
 			});
 		}
 
+		const isNightTime = this.isNightTime();
 		const currentPage = this.state.currentPage
+		// If this.state."abc123" does not exist then these values are false. 
 		const runTemperature = Object.keys(this.state.parsedtemperatureData).length > 0 ? true : false;
 		const runiPhone = Object.keys(this.state.responses.weather).length > 0 ? true : false;
+
 		return (
 			<div id="app">
 
@@ -185,7 +206,8 @@ export default class App extends Component {
 					? <Temperature {...this.state.parsedtemperatureData}
 						getCurrentHour={this.getCurrentHour}
 						switchPageTo={this.switchPageTo}
-						PAGES={PAGES} />
+						PAGES={PAGES}
+						isNightTime={isNightTime} />
 					: null}
 
 				{currentPage == PAGES.CLOTHING
@@ -197,23 +219,27 @@ export default class App extends Component {
 				{currentPage == PAGES.HOME && runiPhone
 					? <Iphone {...this.state.responses.weather}
 						setLocationByUsersCurrentPosition={this.setLocationByUsersCurrentPosition}
-						switchPageTo={this.switchPageTo}
 						PAGES={PAGES}
-						isUsersCurrentLocation={this.state.isUsersCurrentLocation} /> : null}
+						switchPageTo={this.switchPageTo}
+						isUsersCurrentLocation={this.state.isUsersCurrentLocation}
+						isNightTime={isNightTime} />
+					: null}
 
 				{currentPage == PAGES.ADDCITY
 					? <CitySelect fetchGeoCoordinates={this.fetchGeoCoordinates}
 						setLocationByName={this.setLocationByName}
-						cities={this.state.cities} updateCities={this.updateCities}
+						cities={this.state.cities}
+						updateCities={this.updateCities}
+						keygen={this.key}
+						PAGES={PAGES}
 						switchPageTo={this.switchPageTo}
-						PAGES={PAGES} />
+						isNightTime={isNightTime} />
 					: null}
 			</div>
 		)
 	}
 
 	//Populate the cities list with random data
-
 	updateCities = (cities) => {
 		this.setState({ cities: [...cities] });
 	}
@@ -224,6 +250,7 @@ export default class App extends Component {
 		return today.getHours();
 	}
 
+	//Takes the raw weather API json and writes it to the state with an easier to use structure.
 	parseResponse(parsed_json) {
 		// set states for fields so they could be rendered later on
 		this.setState({

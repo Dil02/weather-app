@@ -7,8 +7,19 @@ export default class Temperature extends Component {
 
     //Renders the temperature screen.
     render() {
+
+        let bgImage;
+		if (this.props.isNightTime) {
+			bgImage = style.nightBg;
+		} else if (this.props.rain) {
+			bgImage = style.rainBg;
+		} else {
+			bgImage = style.clearBg;
+		}
+        console.log(bgImage);
+
         return (
-            <div class={style.containerT}>
+            <div class={`${style.containerT} ${bgImage}`}>
                 <header class={style.headerT}>
                     <img id={style.returnT}
                         onClick={() => this.props.switchPageTo(this.props.PAGES.HOME)}
