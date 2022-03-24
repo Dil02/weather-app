@@ -1,8 +1,5 @@
 @import '~style/helpers';
 
-@import 'reset.less';
-
-//This styling sheet is used for the night mode of the Temperature component.
 
 //Defines the main element which will contain all the other elements.
 .containerT { 
@@ -14,8 +11,24 @@
 	padding-top: 20px; //Changed from 80px.
 	margin: 0 auto;
     border: solid thin black;
-    background-image: url("../../assets/backgrounds/stars.jpg");
+    color: white;
+}
+
+//The background image to be displayed when in night mode.
+.nightBg {
+    background-image: url("../../assets/backgrounds/night2.jpg");
     background-size: 100% 100%;
+}
+
+//The background image to be displayed when it is raining.
+.rainBg {
+	background-image: url("../../assets/backgrounds/rain.jpg");
+    background-size: 100% 100%;
+}
+
+//The background gradient to be displayed when in day mode.
+.clearBg {
+    background-image: linear-gradient(peachpuff,orange);
 }
 
 //Styles the header.
@@ -30,6 +43,7 @@
     height: 20px;
     float: left;
     margin-left: 1.5em;
+    cursor: pointer;
 }
 
 //Styles the city name.
@@ -68,6 +82,17 @@
     display: inline-block;
     padding-left: 0.5em;
     padding-right: 0.5em;
+    color: white;
+}
+
+//Defines the style of the hourly temperatures.
+.hourlyTemp{
+    color: black;
+}
+
+//Defines the style of the time.
+.timeT{
+    color: black;
 }
 
 //Highlights the current hour's weather information.
@@ -82,6 +107,7 @@
     font-weight: bolder;
     padding-top: 1em;
     border-bottom: 2px solid lightgrey;
+    color: white;
 }
 
 //Styles the date.
@@ -89,6 +115,7 @@
     font-family: Arial, Helvetica, sans-serif;
     float: left;
     margin-top: 1em;
+    color: white;
 }
 
 //Styles the daily temperatures.
@@ -96,4 +123,5 @@
     font-family: Georgia, 'Times New Roman', Times, serif;
     float: right;
     margin-top: 1em;
+    color: white;
 }

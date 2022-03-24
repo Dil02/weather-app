@@ -1,4 +1,61 @@
+//Defines the style of the 'Strip' components on the home screen such as precipitation etc.
+
+//Styles the font.
+@font-face {
+    font-family: "PermanentMarker";
+    src        : local("PermanentMarker"),
+        url("../../fonts/PermanentMarker-Regular.ttf") format("truetype");
+    font-weight: bold;
+}
+.font_face_pm {
+    font-family   : "PermanentMarker";
+    letter-spacing: 0.05rem;
+}
+.color-red {
+	color: #931a1e;
+}
+
+//Highlights the strips which are interactive by underlining them.
+.clickabble {
+    .stripLeft {
+        text-decoration: underline;
+    }
+    cursor: pointer;
+}
+
+//Adds a shadow to the strip when hovering.
+.clickabble:hover {
+    filter: drop-shadow(5px 5px 5px black);
+}
+
+//Further strip styling.
 .strip {
-    display: flex;
+    display        : flex;
     justify-content: space-between;
+    align-items    : center;
+
+    border       : 6px solid #FA9D13;
+    border-radius: 80px;
+    margin       : 1rem 0;
+    padding: 0.5rem;
+
+    .stripLeft {
+        display: flex;
+        align-items: center;
+        font-size  : 1.1rem;
+
+        img {
+            margin-left: 0.75rem;
+            width      : auto;
+            height     : 48px;
+        }
+    }
+    
+    .stripRight {
+        p {
+            .color-red();
+            font-weight: bold;
+        }
+    }
+
 }

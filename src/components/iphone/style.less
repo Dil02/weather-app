@@ -1,68 +1,214 @@
 @import '~style/helpers';
 
-.container { 
-	display: flex;
-	flex-direction: column;
-	width: 414px;
-	height: 736px;
-	text-align: center;
-	padding-top: 80px;
-	margin: 0 auto;
-	background-color:#fa9d13;
+@font-face {
+	font-family: 'Bitter';
+	src        : local("Bitter"), url('../../fonts/Bitter-VariableFont_wght.ttf') format("truetype-variations");
+	font-weight: 1 999;
 }
+
+//Defines the style of the container of all other elements.
+.container {
+	display         : flex;
+	flex-direction  : column;
+	width           : 414px;
+	height          : auto;
+	text-align      : center;
+	padding         : 40px 0;
+	margin          : 0 auto;
+}
+
+//The background image to be used in night mode.
+.nightBg {
+	background-image: url("../../assets/backgrounds/stars.jpg");
+    background-size: 100% 100%;
+}
+
+//The background image to be used when it is raining.
+.rainBg {
+	background-image: url("../../assets/backgrounds/rain.jpg");
+    background-size: 100% 100%;
+}
+
+//The background gradient to be used in day mode.
+.clearBg {
+	background-image: linear-gradient(peachpuff,orange, peachpuff);
+}
+
+//This is the container of the location, gps and add new locations.
 .header {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	color:#fff;
+	display          : flex;
+	flex-direction   : column;
+	flex             : 1;
+	// color         : #fff;
+	margin           : 0 1.5em;
 }
-.section {
-	margin-top: 0.5em;
-	border-style: solid;
-	border-color: #fff;
-	border-radius: 1em;
-	margin-left: 1.5em;
-	margin-right: 1.5em;
-}
-.footer {
-	margin-top: 1.5em;
-	color: black;
-	background-color: #fff;
-	margin-left: 1.5em;
-	margin-right: 1.5em;
-}
+
 .group1 {
 	border-style: solid;
 	border-color: #fa9d13;
-	border: 1em;
+	border      : 1em;
 }
-.details {
-	flex: 4;
-}
+
+//Styles the city name.
 .city {
-	display: flex;
-	justify-content: center;
-	flex: 1;
-	font-size: 1.7em;
-	font-weight: 400;	
+	display        : flex;
+	justify-content: space-evenly;
+	align-items    : center;
+	flex           : 1;
+	font-size      : 2rem;
+	font-weight    : 400;
+
+	.cityName {
+		font-weight: 165;
+		line-height: 1;
+		filter: invert(37%) sepia(88%) saturate(1896%) hue-rotate(1deg) brightness(103%) contrast(107%);
+	}
+
+	.countryCode {
+		font-weight: 900;
+		font-size  : 1rem;
+		text-align : right;
+		color: #b34100;
+	}
+
+	.addcityicon {
+		-webkit-filter: drop-shadow(3px 3px 2px rgb(63, 63, 63));
+		filter        : drop-shadow(3px 3px 2px rgb(63, 63, 63));
+		width         : 48px;
+		height        : auto;
+		cursor        : pointer;
+	}
+
+	.gpsicon {
+		margin: 0 0.5rem;
+		height: auto;
+		width : 32px;
+		cursor: pointer;
+		filter: invert(24%) sepia(86%) saturate(1643%) hue-rotate(7deg) brightness(102%) contrast(102%);
+	}
 }
+
+
+//Styles the weather information including temperature and weather description.
 .conditions {
-	flex: 1;
-	font-size: 1em;
+	.weather_description {
+		.color-red();
+		font-size: larger;
+		padding  : 0.5rem;
+	}
+
+	.temperature {
+		font-family: Bitter;
+		font-size  : 3.5em;
+		font-weight: 700;
+	}
 }
-.temperature {
-	flex: 2;
-	margin-top: 0;
-	font-size: 4.8em;
-	font-weight: 300;
-	letter-spacing: -12px;
+
+
+//Styles weather info.
+.midsection {
+	border-radius   : 1em;
+	margin-top      : 2rem;
+	border-bottom   : 2px solid #e0b080;
+	background-color: peachpuff;
+
+	div {
+		padding: 0.5rem 0;
+	}
+
+	//Styles weather icon from API.
+	.weather_icon {
+		filter: drop-shadow(0px 0px 10px rgb(85, 46, 46));
+		margin: 1rem 0;
+		width : 100px;
+		height: auto;
+	}
+
+	.sunBox {
+		display        : flex;
+		justify-content: space-between;
+		padding        : 0.5rem;
+
+		//Styles sunrise and sunset information.
+		div {
+			// border       : 3.5px solid #FA9D13;
+			// border-radius: 10px;
+
+			p:first-child {
+				margin        : 0;
+				//padding-bottom: 0.5rem;
+				text-decoration: underline;
+			}
+
+			p:nth-child(2) {
+				.color-red();
+			}
+		}
+	}
 }
-.filled:after {
-	content: "°";
-	margin: 0 0 0 1rem;
-	font-size: 0.5em;
-	font-weight: 100;
-	display: inline-block;
-	padding-top: 10px;
+
+.color-red {
+	filter: invert(32%) sepia(58%) saturate(1653%) hue-rotate(347deg) brightness(93%) contrast(85%);
+}
+
+
+
+.highest_lowest {
+	display        : flex;
+	justify-content: space-evenly;
+	padding        : 0 2rem;
+	.color-red();
+}
+
+//Styles tips.
+.tips {
+	display        : flex;
+	justify-content: space-evenly;
+	height         : 7rem;
+	margin-top     : 1rem;
+	border-top     : 2px solid #FA9D13;
+
+	img {
+		.color-red();
+		width : 3rem;
+		height: auto;
+	}
+
+	p {
+		align-self : flex-end;
+		width      : 60%;
+		font-weight: bold;
+	}
+}
+
+//Styles interactive content such as more information and clothing.
+.footer {
+	color        : black;
+	margin       : 0 1.5em;
+	margin-top   : 2rem;
+	padding      : 1rem;
+	border-radius: 1em;
+
+	border-bottom   : 2px solid #e0b080;
+	background-color: peachpuff;
+}
+
+.degree:after {
+	content       : "°";
+	margin        : 0 0 0 1rem;
+	font-size     : 0.5em;
+	font-weight   : 100;
+	display       : inline-block;
+	padding-top   : 10px;
+	vertical-align: top;
+}
+
+.degree2:after {
+	content       : "°";
+	margin        : 0 0 0 0.2rem;
+	font-size     : 1em;
+	font-weight   : 100;
+	display       : inline-block;
+	padding-top   : 1px;
 	vertical-align: top;
 }

@@ -2,15 +2,31 @@
 import { h, render, Component } from 'preact';
 
 import style from "./style";
+//images
+import leftArrow from '../../assets/icons/left-arrow-white.png';
 
-export default class Clothing extends Component{    
+export default class Clothing extends Component {
 
     //renders the clothing component
-    render(){
-        return(
-            <div class={style.containerC}>
+    render() {
+
+        //Uses the values passed as props to determine the background for the component.
+        let bgImage;
+		if (this.props.isNightTime) {
+			bgImage = style.nightBg;
+		} else if (this.props.rain) {
+			bgImage = style.rainBg;
+		} else {
+			bgImage = style.clearBg;
+		}
+        console.log(bgImage);
+
+        return (
+            <div class={`${style.containerC} ${bgImage}`}>
                 <header class={style.headerC}>
-                    <img id={style.returnC} src="../../assets/icons/left-arrow.png"></img>
+                    <img id={style.returnC} 
+                    src={leftArrow} 
+                    onClick={() => this.props.switchPageTo(this.props.PAGES.HOME)} />
                     <h4 id={style.titleC}>Clothing and Accessories</h4>
                 </header>
                 <section id={style.clothingDisplay}>
@@ -19,14 +35,16 @@ export default class Clothing extends Component{
                         {this.displayItems(this.props.clothingItems)}
                     </ul>
                 </section>
+
                 <footer>
+
                 </footer>
             </div>
         );
     }
 
     // This function is used to display the clothing items.
-    displayItems(items){
+    displayItems(items) {
         //The map function returns a clothing item's name, image, description and brand logo in their respective html tags all wrapped within an <li>.
         //The function iterates through the clothing Items array, passed as a prop.
         return items.map(item => (
@@ -38,10 +56,10 @@ export default class Clothing extends Component{
                     <a href={item.brandUrl} target="_blank">
                         <img class={style.brandLogo} src={"../../assets/icons/brands/" + item.brandLogo} alt="Brand Logo"></img>
                     </a>
-                </div> 
+                </div>
             </li>
         ));
     }
-    
+
 
 }

@@ -1,6 +1,7 @@
 // import 'promise-polyfill';
 // import 'isomorphic-fetch';
 import { h, render } from 'preact';
+import './reset.less';
 import './style';
 
 let root;

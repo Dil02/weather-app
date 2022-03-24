@@ -14,7 +14,7 @@ const CSS_MAPS = ENV!=='production';
 
 module.exports = {
 	context: path.resolve(__dirname, "src"),
-	entry: './index.js',
+	entry: ['regenerator-runtime/runtime.js', './index.js'],
 
 	output: {
 		path: path.resolve(__dirname, "build"),

@@ -1,7 +1,5 @@
 @import '~style/helpers';
 
-@import 'reset.less';
-
 //Defines the main element which will contain all other elements.
 .containerC { 
 	display: flex;
@@ -16,6 +14,23 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+//The background image to be used in night mode.
+.nightBg {
+    background-image: url("../../assets/backgrounds/night2.jpg");
+    background-size: 100% 100%;
+}
+
+//The background image to be used when it is raining.
+.rainBg {
+	background-image: url("../../assets/backgrounds/rain.jpg");
+    background-size: 100% 100%;
+}
+
+//The background gradient to be used in day mode.
+.clearBg {
+    background-image: linear-gradient(orange,peachpuff);
+}
+
 //Styles the header.
 .headerC{
     margin-top: 1em;
@@ -28,6 +43,7 @@
     height: 20px;
     float: left;
     margin-left: 1.5em;
+    cursor: pointer;
 }
 
 //Styles the title on the screen.
